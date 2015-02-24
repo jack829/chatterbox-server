@@ -18,14 +18,15 @@ var defaultCorsHeaders = {
   "access-control-max-age": 10 // Seconds.
 };
 var headers = defaultCorsHeaders;
-headers['Content-Type'] = "application/json";
+headers['Content-Type'] = "text/plain";
 
 var sendResponse = function(response, data, statusCode) {
-  response.writeHead(statusCode, headers);
+  response.writeHead(statusCode, headers); 
   response.end(JSON.stringify(data));
 };
 
 var storeData = function(request, cb){
+  console.log('in storeData')
   var data = '';
   request.on('data', function(someData){
     data += someData;
@@ -35,13 +36,14 @@ var storeData = function(request, cb){
   });
 }
 
+var messages = [
+  {
+    username: "Jack",
+    text: "What"
+  }
+];
+
 module.exports = function(request, response) {
-  var messages = [
-    {
-      username: "Jack",
-      message: "WHat"
-    }
-  ];
   var statusCode = 200;
 
   console.log("Serving request type " + request.method + " for url " + request.url);
@@ -50,15 +52,13 @@ module.exports = function(request, response) {
     statusCode = 201;
     storeData(request, function(message){
       messages.push(message);
-      sendResponse(response, resultObj, statusCode)
+      sendResponse(response, messages, statusCode)
     });
   } else if (request.method === 'GET'){
     sendResponse(response, {results: messages}, statusCode);
-  } 
-  // else {
-  //   statusCode = 404;
-  //   sendResponse(statusCode)
-  // }
+  } else if (request.method === 'OPTIONS') {
+    sendResponse(response, null)
+  }
 
 };
 

@@ -2,7 +2,7 @@ var app;
 $(function() {
   app = {
     //server: 'https://api.parse.com/1/classes/chatterbox/',
-    server: 'https://127.0.0.1:3000/classes/chatterbox/',
+    server: 'http://127.0.0.1:3000/classes/chatterbox/',
     rooms: {},
     friends: {},
     // username: 'anonymous',
@@ -29,8 +29,9 @@ $(function() {
 
     fetch : function() {
       $.ajax({
-        url: app.server + '?order=-createdAt',
+        url: app.server ,
         type: 'GET',
+        data: {order: '-createdAt'},
         contentType: 'application/json',
         success: function(data){
           console.log('chatterbox: message received');
