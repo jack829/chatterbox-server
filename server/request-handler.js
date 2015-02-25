@@ -45,30 +45,32 @@ var messages = [
   // }
 ];
 
-requestHandler = function(request, response) {
-  var statusCode = 200;
-
-  console.log("Serving request type " + request.method + " for url " + request.url);
-  
-  if (request.url !== '/classes/messages') {
-    sendResponse(response, "Not Found", 404);
-  }
-
-  if (request.method === 'POST') {
-    statusCode = 201;
+var actions = {
+  'GET': function(request, response){
+    sendResponse(response, {results: messages});
+  },
+  'POST': function(request, response){
     storeData(request, function(message){
       messages.push(message);
-      sendResponse(response, messages, statusCode)
+      sendResponse(response, messages, 201)
     });
-  } else if (request.method === 'GET'){
-    sendResponse(response, {results: messages}, statusCode);
-  } else if (request.method === 'OPTIONS') {
+  },
+  'OPTIONS': function(request, response){
     sendResponse(response, null)
+  }
+}
+
+requestHandler = function(request, response) {
+  var action = actions[request.method];
+  if (action) {
+    action(request, response);
+  } else {
+    sendResponse(response, "Not Found", 404)
   }
 };
 
 exports.requestHandler = requestHandler;
-//exports.sendResponse = sendResponse;
+exports.sendResponse = sendResponse;
 //exports.storeData = storeData;
 
   // Request and Response come from node's http module.
