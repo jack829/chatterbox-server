@@ -2,7 +2,7 @@ var app;
 $(function() {
   app = {
     //server: 'https://api.parse.com/1/classes/chatterbox/',
-    server: 'http://127.0.0.1:3000/classes/chatterbox/',
+    //server: 'http://127.0.0.1:3000/classes/chatterbox/',
     rooms: {},
     friends: {},
     // username: 'anonymous',

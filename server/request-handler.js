@@ -21,6 +21,7 @@ var headers = defaultCorsHeaders;
 headers['Content-Type'] = "text/plain";
 
 var sendResponse = function(response, data, statusCode) {
+  statusCode = statusCode || 200;
   response.writeHead(statusCode, headers); 
   response.end(JSON.stringify(data));
 };
@@ -37,17 +38,21 @@ var storeData = function(request, cb){
 }
 
 var messages = [
-  {
-    username: "Jack",
-    text: "What",
-    roomname: "lobby"
-  }
+  // {
+  //   username: "Jack",
+  //   text: "What",
+  //   roomname: "lobby"
+  // }
 ];
 
 module.exports = function(request, response) {
   var statusCode = 200;
 
   console.log("Serving request type " + request.method + " for url " + request.url);
+  
+  if (request.url !== '/classes/messages') {
+    sendResponse(response, "Not Found", 404);
+  }
 
   if (request.method === 'POST') {
     statusCode = 201;
@@ -59,9 +64,6 @@ module.exports = function(request, response) {
     sendResponse(response, {results: messages}, statusCode);
   } else if (request.method === 'OPTIONS') {
     sendResponse(response, null)
-  } else if (!request.url) {
-    statusCode = 404;
-    sendResponse(response, "Not Found", statusCode)
   }
 
 };
