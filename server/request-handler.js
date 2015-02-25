@@ -45,7 +45,7 @@ var messages = [
   // }
 ];
 
-module.exports = function(request, response) {
+requestHandler = function(request, response) {
   var statusCode = 200;
 
   console.log("Serving request type " + request.method + " for url " + request.url);
@@ -65,8 +65,11 @@ module.exports = function(request, response) {
   } else if (request.method === 'OPTIONS') {
     sendResponse(response, null)
   }
-
 };
+
+exports.requestHandler = requestHandler;
+//exports.sendResponse = sendResponse;
+//exports.storeData = storeData;
 
   // Request and Response come from node's http module.
   //
