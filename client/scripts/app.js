@@ -23,8 +23,8 @@ $(function() {
       app.$send.on('submit', app.handleSubmit);
       app.$roomSelect.on('change', app.saveRoom);
       app.fetch();
-      // setInterval(app.clearMessages.bind(app), 5000);
-      // setIterval(app.fetch.bind(app), 5000);
+      setInterval(app.clearMessages, 5000);
+      setInterval(app.fetch, 5000);
     },
 
     fetch : function() {
@@ -34,24 +34,22 @@ $(function() {
         data: {order: '-createdAt'},
         contentType: 'application/json',
         success: function(data){
-          console.log('chatterbox: message received');
-          console.log(data);
-          _.each(data.results, function(message){
+          // console.log('chatterbox: message received');
+          // console.log(JSON.parse(data));
+          var messageData = JSON.parse(data);
+          _.each(messageData.results, function(message){
             if( message.roomname === app.$roomSelect.val()){
               app.addMessage(message);
+            } else {
+              app.addRoom(app.escapeHtml(message.roomname));
+              app.addMessage(message);
             }
-            app.addRoom(app.escapeHtml(message.roomname));
-            // $('#main').append('<div class= "message"><p>' + app.escapeHtml(message.username) + ': ' + app.escapeHtml(message.text) +'. In room: ' + app.escapeHtml(message.roomname) +'</p><p>' + app.escapeHtml(message.createdAt) + '</p></div>');
           });
-          //iterate through all results
-          //assign to div
-          //more readable texts
         },
         error: function(data){
           console.error('chatterbox: failed to receive message');
         },
       });
-      //setInterval(app.fetch(), 50000);
     },
 
     send : function(message) {

@@ -39,7 +39,8 @@ var storeData = function(request, cb){
 var messages = [
   {
     username: "Jack",
-    text: "What"
+    text: "What",
+    roomname: "lobby"
   }
 ];
 
@@ -58,6 +59,9 @@ module.exports = function(request, response) {
     sendResponse(response, {results: messages}, statusCode);
   } else if (request.method === 'OPTIONS') {
     sendResponse(response, null)
+  } else if (!request.url) {
+    statusCode = 404;
+    sendResponse(response, "Not Found", statusCode)
   }
 
 };
